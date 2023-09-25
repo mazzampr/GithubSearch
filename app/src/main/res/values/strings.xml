@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">GithubSearch</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="follower">Follower</string>
+    <string name="following">Following</string>
+    <string name="fitur_develop_info">Fitur masih dalam tahap pengembangan</string>
+    <string name="username_not_found">Username tidak ditemukan</string>
+    <string name="text_follow_null">Tidak ada data yang ditampilkan</string>
+    <string name="text_info_jumlah_user">Jumlah user yang ditampilkan :</string>
+</resources>
