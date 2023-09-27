@@ -3,10 +3,12 @@ package com.mazzampr.githubsearch.adapter
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mazzampr.githubsearch.data.local.entity.UsersEntity
 import com.mazzampr.githubsearch.data.remote.response.UserResponse
-import com.mazzampr.githubsearch.databinding.FragmentHomeBinding
 import com.mazzampr.githubsearch.databinding.UserItemBinding
 
 class SearchUserAdapter: RecyclerView.Adapter<SearchUserAdapter.SearchUserViewHolder>() {

@@ -6,15 +6,14 @@
 
         <item
             android:id="@+id/btnLoveList"
-            android:icon="@drawable/ic_favorite_filled"
-            android:title="Saved Profile"
+            android:icon="@drawable/ic_favorite_primary"
+            android:title="@string/user_favorite"
             app:showAsAction="ifRoom"/>
 
         <item
             android:id="@+id/btnSetting"
-            android:title="Dark Mode"
-            android:icon="@drawable/ic_settings"
+            android:title="@string/settings"
+            android:icon="@drawable/ic_settings_primary"
             app:showAsAction="ifRoom" />
-
     </group>
 </menu>

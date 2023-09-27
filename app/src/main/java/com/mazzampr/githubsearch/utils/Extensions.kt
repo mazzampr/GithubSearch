@@ -1,4 +1,4 @@
-package com.mazzampr.githubsearch.util
+package com.mazzampr.githubsearch.utils
 
 import android.app.Activity
 import android.view.View

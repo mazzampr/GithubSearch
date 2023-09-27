@@ -19,7 +19,8 @@
             android:gravity="center_vertical"
             android:paddingTop="@dimen/_8sdp"
             android:paddingStart="@dimen/_8sdp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="RtlSymmetry">
 
             <ImageView
                 android:id="@+id/btn_back"
@@ -27,13 +28,15 @@
                 android:layout_height="wrap_content"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:src="@drawable/ic_arrow_back"/>
+                android:src="@drawable/ic_arrow_back"
+                tools:ignore="UnusedAttribute"
+                android:focusable="true" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_18ssp"
                 android:layout_marginStart="@dimen/_16sdp"
-                android:text="Detail User"/>
+                android:text="@string/detail_user"/>
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -137,12 +140,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:padding="@dimen/_6sdp">
+                                android:padding="@dimen/_6sdp"
+                                tools:ignore="UseCompoundDrawables">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_person_add"/>
+                                    android:src="@drawable/ic_person_add"
+                                    android:contentDescription="@string/todo" />
                                 <TextView
                                     android:id="@+id/tvTotalFollowers"
                                     android:layout_width="wrap_content"
@@ -164,12 +169,14 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_vertical"
-                                android:padding="@dimen/_6sdp">
+                                android:padding="@dimen/_6sdp"
+                                tools:ignore="UseCompoundDrawables">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@drawable/ic_person_24"/>
+                                    android:src="@drawable/ic_person_24"
+                                    android:contentDescription="@string/todo" />
                                 <TextView
                                     android:id="@+id/tvTotalFollowing"
                                     android:layout_width="wrap_content"
@@ -202,5 +209,25 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_16sdp"
+        android:src="@drawable/ic_favorite_border"
+        android:contentDescription="@string/favorite" />
+    <ProgressBar
+        android:id="@+id/progressBarFav"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_16sdp">
+
+    </ProgressBar>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

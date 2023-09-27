@@ -7,8 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
@@ -17,20 +16,27 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mazzampr.githubsearch.R
 import com.mazzampr.githubsearch.adapter.FollowViewPagerAdapter
 import com.mazzampr.githubsearch.adapter.SearchUserAdapter
+import com.mazzampr.githubsearch.data.Result
+import com.mazzampr.githubsearch.data.local.entity.UsersEntity
+import com.mazzampr.githubsearch.data.remote.response.UserResponse
 import com.mazzampr.githubsearch.databinding.FragmentDetailBinding
-import com.mazzampr.githubsearch.util.hide
-import com.mazzampr.githubsearch.util.show
+import com.mazzampr.githubsearch.utils.hide
+import com.mazzampr.githubsearch.utils.show
+import com.mazzampr.githubsearch.utils.toast
 import com.mazzampr.githubsearch.viewmodel.DetailViewModel
+import com.mazzampr.githubsearch.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 
 
 class DetailFragment : Fragment() {
 
     private var _binding: FragmentDetailBinding? = null
+    private val viewModel by viewModels<DetailViewModel> { ViewModelFactory.getInstance(requireActivity()) }
 
     private val binding get() = _binding!!
     private lateinit var searchListAdapter: SearchUserAdapter
-    private val detailViewModel by viewModels<DetailViewModel>()
+
+    private var isFavorite = false
 
     companion object {
         @StringRes
@@ -56,6 +62,7 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val user = DetailFragmentArgs.fromBundle(arguments as Bundle).userResponse
         prepareDetailPage(user)
         prepareViewPager(user)
@@ -67,12 +74,12 @@ class DetailFragment : Fragment() {
     }
 
     private fun prepareDetailPage(user: String?) {
-        detailViewModel.viewModelScope.launch { detailViewModel.getDetailUser(user!!) }
+        viewModel.viewModelScope.launch { viewModel.getDetailUser(user!!) }
     }
 
     @SuppressLint("SetTextI18n")
     private fun observeData() {
-        detailViewModel.isLoading.observe(viewLifecycleOwner) {isLoading->
+        viewModel.isLoading.observe(viewLifecycleOwner) {isLoading->
             if (isLoading) {
                 binding.shimmerViewContainer.startShimmer()
                 binding.viewDetailUser.visibility = View.GONE
@@ -84,7 +91,7 @@ class DetailFragment : Fragment() {
                 }
             }
         }
-        detailViewModel.user.observe(viewLifecycleOwner) {user ->
+        viewModel.user.observe(viewLifecycleOwner) {user ->
             Glide.with(requireContext())
                 .load(user.avatarUrl)
                 .into(binding.ivUserProfile)
@@ -94,6 +101,8 @@ class DetailFragment : Fragment() {
                 tvTotalFollowers.text = "${user.followers} Followers"
                 tvTotalFollowing.text = "${user.following} Following"
             }
+
+            setFavorite(user)
         }
 
     }
@@ -106,5 +115,60 @@ class DetailFragment : Fragment() {
         TabLayoutMediator(tabs, binding.viewPagerFollow) {tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
+    }
+
+    private fun setFavorite(user: UserResponse) {
+        val userEntity = UsersEntity(user.login!!, user.id.toString(), user.avatarUrl!!)
+
+        viewModel.getUserFav(user.login).observe(viewLifecycleOwner) {
+            isFavorite = it.isNotEmpty()
+            val btnFavorite = binding.btnFavorite
+            if (isFavorite) {
+                btnFavorite.setImageDrawable(ContextCompat.getDrawable(btnFavorite.context, R.drawable.ic_favorite_filled))
+            } else {
+                btnFavorite.setImageDrawable(ContextCompat.getDrawable(btnFavorite.context, R.drawable.ic_favorite_border))
+            }
+        }
+        binding.btnFavorite.setOnClickListener {
+            if (isFavorite) {
+                viewModel.deleteUser(userEntity).observe(viewLifecycleOwner) {
+                    when(it) {
+                        is Result.Loading -> {
+                            binding.btnFavorite.hide()
+                            binding.progressBarFav.show()
+                        }
+                        is Result.Success -> {
+                            binding.progressBarFav.hide()
+                            toast(it.data)
+                        }
+                        is Result.Error -> {
+                            binding.btnFavorite.show()
+                            binding.progressBarFav.show()
+                            toast("Error")
+                        }
+                    }
+                }
+            } else {
+                viewModel.saveFavUser(userEntity).observe(viewLifecycleOwner) {
+                    when(it) {
+                        is Result.Loading -> {
+                            binding.btnFavorite.hide()
+                            binding.progressBarFav.show()
+                        }
+                        is Result.Success -> {
+                            binding.progressBarFav.hide()
+                            binding.btnFavorite.show()
+                            toast(it.data)
+                        }
+                        is Result.Error -> {
+                            binding.btnFavorite.show()
+                            binding.progressBarFav.show()
+                            toast("Error")
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

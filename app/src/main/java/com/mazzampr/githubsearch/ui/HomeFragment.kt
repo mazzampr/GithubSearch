@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,9 +12,8 @@ import com.mazzampr.githubsearch.R
 import com.mazzampr.githubsearch.adapter.SearchUserAdapter
 import com.mazzampr.githubsearch.data.remote.response.UserResponse
 import com.mazzampr.githubsearch.databinding.FragmentHomeBinding
-import com.mazzampr.githubsearch.util.hide
-import com.mazzampr.githubsearch.util.show
-import com.mazzampr.githubsearch.util.toast
+import com.mazzampr.githubsearch.utils.hide
+import com.mazzampr.githubsearch.utils.show
 import com.mazzampr.githubsearch.viewmodel.HomeViewModel
 
 class HomeFragment : Fragment() {
@@ -56,14 +54,17 @@ class HomeFragment : Fragment() {
         observeUserListLiveData()
         onUsersItemClicked()
 
+
         binding.topAppBar.setOnMenuItemClickListener {menuItem ->
             when(menuItem.itemId) {
                 R.id.btnLoveList -> {
-                    toast(getString(R.string.fitur_develop_info))
+                    val action = HomeFragmentDirections.actionHomeFragmentToFavoriteFragment()
+                    findNavController().navigate(action)
                     true
                     }
                 R.id.btnSetting -> {
-                    toast(getString(R.string.fitur_develop_info))
+                    val action = HomeFragmentDirections.actionHomeFragmentToSettingFragment()
+                    findNavController().navigate(action)
                     true
                 }
                 else -> false

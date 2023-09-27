@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mazzampr.githubsearch.adapter.SearchUserAdapter
 import com.mazzampr.githubsearch.data.remote.response.UserResponse
 import com.mazzampr.githubsearch.databinding.FragmentFollowBinding
-import com.mazzampr.githubsearch.util.hide
-import com.mazzampr.githubsearch.util.show
+import com.mazzampr.githubsearch.utils.hide
+import com.mazzampr.githubsearch.utils.show
 import com.mazzampr.githubsearch.viewmodel.FollowViewModel
 
 class FollowFragment : Fragment() {
