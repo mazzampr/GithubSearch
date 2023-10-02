@@ -30,21 +30,13 @@ import kotlinx.coroutines.launch
 
 class DetailFragment : Fragment() {
 
-    private var _binding: FragmentDetailBinding? = null
     private val viewModel by viewModels<DetailViewModel> { ViewModelFactory.getInstance(requireActivity()) }
 
+    private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
     private lateinit var searchListAdapter: SearchUserAdapter
 
     private var isFavorite = false
-
-    companion object {
-        @StringRes
-        private val TAB_TITLES = intArrayOf(
-            R.string.follower,
-            R.string.following
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +46,7 @@ class DetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = FragmentDetailBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -98,8 +90,8 @@ class DetailFragment : Fragment() {
             binding.apply {
                 tvName.text = user.name
                 tvUsername.text = user.login
-                tvTotalFollowers.text = "${user.followers} Followers"
-                tvTotalFollowing.text = "${user.following} Following"
+                tvTotalFollowers.text = StringBuilder().append(user.followers).append(" Followers")
+                tvTotalFollowing.text = StringBuilder().append(user.following).append(" Following")
             }
 
             setFavorite(user)
@@ -170,5 +162,17 @@ class DetailFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+    companion object {
+        @StringRes
+        private val TAB_TITLES = intArrayOf(
+            R.string.follower,
+            R.string.following
+        )
     }
 }

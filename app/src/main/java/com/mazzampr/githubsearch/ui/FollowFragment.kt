@@ -16,16 +16,17 @@ import com.mazzampr.githubsearch.utils.show
 import com.mazzampr.githubsearch.viewmodel.FollowViewModel
 
 class FollowFragment : Fragment() {
-    private lateinit var binding: FragmentFollowBinding
+    private var _binding: FragmentFollowBinding? = null
+    private val binding get() = _binding!!
     private val followViewModel by viewModels<FollowViewModel>()
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        binding = FragmentFollowBinding.inflate(inflater)
+        _binding = FragmentFollowBinding.inflate(inflater)
         return binding.root
     }
 
@@ -45,19 +46,12 @@ class FollowFragment : Fragment() {
         observeData()
     }
 
-    companion object {
-        private const val ARG_INDEX = "index"
-        private const val ARG_BUNDLE = "data"
-
-        @JvmStatic
-        fun newInstance(index: Int, user: String?) =
-            FollowFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_INDEX, index)
-                    putString(ARG_BUNDLE, user)
-                }
-            }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
+
+
 
     private fun observeData() {
         followViewModel.isLoading.observe(viewLifecycleOwner) {isLoading ->
@@ -73,14 +67,14 @@ class FollowFragment : Fragment() {
         }
 
         followViewModel.userFollowing.observe(viewLifecycleOwner) {
-            if (it?.isEmpty()!!) {
+            if (it.isNullOrEmpty()) {
                 binding.tvDataNull.show()
                 return@observe
             }
             setUpRvUserFollow(it)
         }
         followViewModel.userFollowers.observe(viewLifecycleOwner) {
-            if (it?.isEmpty()!!) {
+            if (it.isNullOrEmpty()) {
                 binding.tvDataNull.show()
                 return@observe
             }
@@ -107,4 +101,17 @@ class FollowFragment : Fragment() {
         }
     }
 
+    companion object {
+        private const val ARG_INDEX = "index"
+        private const val ARG_BUNDLE = "data"
+
+        @JvmStatic
+        fun newInstance(index: Int, user: String?) =
+            FollowFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(ARG_INDEX, index)
+                    putString(ARG_BUNDLE, user)
+                }
+            }
+    }
 }

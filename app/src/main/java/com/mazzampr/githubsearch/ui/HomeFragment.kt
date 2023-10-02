@@ -24,10 +24,6 @@ class HomeFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    companion object{
-        private var INIT_QUERY = "maze"
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,7 +33,7 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
@@ -71,6 +67,11 @@ class HomeFragment : Fragment() {
             }
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setUIResultCount(count: Int) {
@@ -117,7 +118,7 @@ class HomeFragment : Fragment() {
     private fun setUpSearchBar() {
         binding.apply {
             searchView.setupWithSearchBar(searchBar)
-            searchView.editText.setOnEditorActionListener { text, actionId, event ->
+            searchView.editText.setOnEditorActionListener { _, _, _ ->
                 searchView.hide()
                 homeViewModel.getUserList(searchView.text.toString())
                 false
@@ -135,6 +136,10 @@ class HomeFragment : Fragment() {
                 shimmerViewContainer.hide()
             }
         }
+    }
+
+    companion object{
+        private var INIT_QUERY = "maze"
     }
 
 }
